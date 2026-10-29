@@ -46,6 +46,14 @@ The automated suite covers immutable task operations, filtering/counts, versione
 
 For browser verification, exercise all task actions in both development and production preview, reload to confirm persistence, and check keyboard navigation and focus after removing rows. Inspect 320px, 768px, and 1440px layouts, 200% zoom, long text, and reduced-motion mode. Automated DOM tests do not replace visual or screen-reader checks.
 
+## GitHub Pages deployment
+
+The deployment workflow in `.github/workflows/deploy.yml` runs on pushes to `main` and can also be started manually from the Actions tab. It installs dependencies with `bun install --frozen-lockfile`, runs tests and lint, builds the Vite app, and uploads `dist/` for deployment to the `github-pages` environment. Only the deployment job receives Pages write and OIDC permissions.
+
+Before the first deployment, a repository administrator must open **Settings → Pages → Build and deployment → Source** and select **GitHub Actions**. The workflow does not enable Pages or change repository settings itself. If a run fails because Pages is not enabled, select that source and rerun the workflow. Any protection rules on the `github-pages` environment must also allow deployment from `main`.
+
+The expected project URL is https://xlc.github.io/todo-list-webapp/ once deployment succeeds. `vite.config.ts` sets `base: '/todo-list-webapp/'` so built scripts, styles, and the favicon use that project path. Development and production preview also use `/todo-list-webapp/`; follow the URL printed by Vite. If the repository is renamed or a custom domain is configured, update the base path to match the hosting location.
+
 ## Project layout
 
 ```text
@@ -65,4 +73,4 @@ public/favicon.svg     Local app icon
 vitest.config.ts       DOM test configuration
 ```
 
-No deployment, account system, or cross-tab synchronization is included. `bun run preview` is for local build inspection, not a production hosting server.
+No account system or cross-tab synchronization is included. `bun run preview` is for local build inspection, not a production hosting server.
